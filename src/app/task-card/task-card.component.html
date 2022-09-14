@@ -1,4 +1,4 @@
-<div class="task-card {{cardIndex}}">
+<div #taskCard class="task-card {{cardIndex}}">
   <div class="checkbox">
     <form>
       <input type="checkbox" class="checkbox {{cardIndex}}" (change)="onCheckboxSelect($event)">
@@ -9,6 +9,6 @@
   </div>
   <div class="buttons {{cardIndex}}">
     <button class="edit-btn btn {{cardIndex}}">Edit</button>
-    <button class="del-btn btn {{cardIndex}}">Del</button>
+    <button class="del-btn btn {{cardIndex}}" (click)="deleteTask($event)">Del</button>
   </div>
 </div>

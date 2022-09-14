@@ -14,12 +14,4 @@ export class TheListService {
   }
 
   constructor() { }
-
-  addToMyList(newValue: string) {
-    this.myList.push(newValue)
-  }
-
-  removeFromMylest(x: any) {
-    this.myList.push(x)
-  }
 }

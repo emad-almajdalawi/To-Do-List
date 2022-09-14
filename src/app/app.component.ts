@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
 
   onKeyEnter(e: any) {
     e.preventDefault();
-    this.listService.addToMyList(e.target.value)
+    this.listService.myList.push(e.target.value)
   }
 
   onSelectAll(e: any) {
@@ -29,12 +29,10 @@ export class AppComponent implements OnInit {
       this.listService.myList.forEach(element => {
         console.log(element)
         this.listService.doneList.push(element)
-        this.SelectAllClassName = "done"
       })
     }
     else {
       this.listService.doneList = []
-      this.SelectAllClassName = ''
     }
   }
 }

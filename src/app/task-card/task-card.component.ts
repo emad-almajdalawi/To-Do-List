@@ -10,10 +10,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   @ViewChild('taskTitle')
   textEl?: ElementRef;
   taskTitle: string = ""
+  textElement: any
 
   @Input() task: string = '';
   @Input() cardIndex: number = 0;
-  @Input() selectAllClassName: string = ''
 
   className = ''
 
@@ -23,15 +23,14 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.textElement = this.textEl?.nativeElement
     this.taskTitle = this.textEl?.nativeElement.textContent.trim();
     this.addDoneToClass()
-
   }
 
   onCheckboxSelect(e: any) {
     e.preventDefault();
     let checked = e.target.checked
-    // let firstClass = e.target.classList[0]
     if (checked) {
       this.listService.doneList.push(this.taskTitle)
     }
@@ -67,4 +66,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   //   }
   // }
   // }
+
+  deleteTask(e: any) {
+    e.preventDefault();
+    let index = this.listService.myList.indexOf(this.taskTitle)
+    this.listService.myList.splice(index, 1)
+  }
 }
