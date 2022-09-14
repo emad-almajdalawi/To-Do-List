@@ -15,13 +15,13 @@
     </div>
     <div class="select-all">
       <form class="select-all-form">
-        <input type="checkbox" class="select-all">
+        <input type="checkbox" class="select-all" (change)="onSelectAll($event)">
         <label>Sellect All</label>
       </form>
     </div>
   </div>
-  <div class="task" *ngFor="let t of tasks">
-    <app-task-card [task]="t"></app-task-card>
+  <div class="task" *ngFor="let t of tasks; let i=index">
+    <app-task-card [task]="t" [cardIndex]="i"></app-task-card>
   </div>
   <div class="uncompleted-tasks">
     <p>{{tasks.length}} uncompleted tasks</p>

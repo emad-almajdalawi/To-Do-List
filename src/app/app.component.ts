@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Event } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TheListService } from './the-list.service';
 
 @Component({
@@ -10,6 +9,7 @@ import { TheListService } from './the-list.service';
 export class AppComponent implements OnInit {
   title: string = 'toDoList';
   tasks: string[] = [];
+  SelectAllClassName = ''
 
   constructor(public listService: TheListService) { }
 
@@ -22,8 +22,19 @@ export class AppComponent implements OnInit {
     this.listService.addToMyList(e.target.value)
   }
 
-  onCheckboxSelect(e: any) {
+  onSelectAll(e: any) {
     e.preventDefault();
-    console.log(e)
+    let checked = e.target.checked
+    if (checked) {
+      this.listService.myList.forEach(element => {
+        console.log(element)
+        this.listService.doneList.push(element)
+        this.SelectAllClassName = "done"
+      })
+    }
+    else {
+      this.listService.doneList = []
+      this.SelectAllClassName = ''
+    }
   }
 }
