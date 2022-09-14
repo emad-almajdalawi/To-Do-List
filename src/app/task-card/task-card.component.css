@@ -1,0 +1,35 @@
+* {
+  border-radius: 10px;
+  background: #fff;
+  margin: 10px;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: 1fr 8fr 2fr;
+}
+
+.btn {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.edit-btn {
+  background: lightgreen;
+}
+
+.del-btn {
+  background: lightcoral;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  transform: scale(1.2);
+}
+
+.task-title {
+  display: flex;
+  align-items: center;
+}

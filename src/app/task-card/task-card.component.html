@@ -1,0 +1,14 @@
+<div class="task-card">
+  <div class="checkbox">
+    <form>
+      <input type="checkbox" class="checkbox" (change)="onCheckboxSelect($event)">
+    </form>
+  </div>
+  <div class="task-title">
+    {{task}}
+  </div>
+  <div class="buttons">
+    <button class="edit-btn btn">Edit</button>
+    <button class="del-btn btn">Del</button>
+  </div>
+</div>
