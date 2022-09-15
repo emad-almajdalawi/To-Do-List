@@ -27,10 +27,8 @@
     <div class="uncompleted-tasks">
       <p>{{listService.myList.length}} uncompleted tasks</p>
     </div>
-    <div class="deleteAll">
-      <button class="del-all-btn btn" (click)="deleteAll($event)">Delete All</button>
+    <div class="delete-selected" (click)="deleteSelected($event)">
+      <button #delSelected class="del-btn btn del-selected">Delete Selected</button>
+      <button class="del-btn btn" (click)="deleteAll($event)">Delete All</button>
     </div>
   </div>
-  <div class="completed-tasks">
-  </div>
-</div>

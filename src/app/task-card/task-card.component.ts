@@ -25,7 +25,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   ngAfterViewInit(): void {
     this.textElement = this.textEl?.nativeElement
     this.taskTitle = this.textEl?.nativeElement.textContent.trim();
@@ -37,10 +36,15 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     let checked = e.target.checked
     if (checked) {
       this.listService.doneList.value.push(this.taskTitle)
+      this.listService.checked.push(this.taskTitle)
     }
     else if (this.listService.doneList.value.includes(this.taskTitle)) {
       let index = this.listService.doneList.value.indexOf(this.taskTitle)
       this.listService.doneList.value.splice(index, 1)
+    }
+    else if (this.listService.checked.includes(this.taskTitle)) {
+      let index = this.listService.doneList.value.indexOf(this.taskTitle)
+      this.listService.checked.splice(index, 1)
     }
 
     this.addDoneToClass();
@@ -53,23 +57,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
       this.className = ''
     }
   }
-
-  // onSelectAll(e: any) {
-  //   e.preventDefault();
-  //   let checked = e.target.checked
-  //   if (checked) {
-  //     this.listService.myList.forEach(element => {
-  //       console.log(element)
-  //       this.listService.doneList.push(element)
-  //       this.SelectAllClassName = "done"
-  //     })
-  //   }
-  //   else {
-  //     this.listService.doneList = []
-  //     this.SelectAllClassName = ''
-  //   }
-  // }
-  // }
 
   deleteTask(e: any) {
     e.preventDefault();

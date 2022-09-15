@@ -8,6 +8,7 @@ export class TheListService {
 
   myList: string[] = ['task1', 'task2', 'task3'];
   doneList: BehaviorSubject<string[]> = new BehaviorSubject(['']);
+  checked: string[] = []
 
   printing() {
     console.log(this.myList)

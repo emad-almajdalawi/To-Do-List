@@ -9,10 +9,19 @@ import { TheListService } from './the-list.service';
 export class AppComponent implements OnInit {
   title: string = 'toDoList';
 
+  // @ViewChild('delSelected')
+  // delSelEl?: ElementRef;
+  // delSelClassList: string[] = []
+
   constructor(public listService: TheListService) { }
 
   ngOnInit() {
   }
+
+  // ngAfterViewInit(): void {
+  //   this.delSelClassList = this.delSelEl?.nativeElement.className
+  //   console.log(this.delSelClassList)
+  // }
 
   onKeyEnter(e: any) {
     e.preventDefault();
@@ -24,7 +33,6 @@ export class AppComponent implements OnInit {
     let checked = e.target.checked
     if (checked) {
       this.listService.myList.forEach(element => {
-
         this.listService.doneList.next(
           [...this.listService.doneList.value, element]
         )
@@ -37,5 +45,15 @@ export class AppComponent implements OnInit {
 
   deleteAll(e: any) {
     this.listService.myList = [];
+  }
+
+  deleteSelected(e: any) {
+    this.listService.doneList.value.forEach(element => {
+      if (this.listService.myList.includes(element)) {
+        console.log(element)
+        let index = this.listService.myList.indexOf(element)
+        this.listService.myList.splice(index, 1)
+      }
+    })
   }
 }
