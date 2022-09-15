@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, NgModule, OnInit, ViewChild } from '@angular/core';
 import { TheListService } from '../the-list.service';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-task-card',
@@ -12,16 +14,22 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   taskTitle: string = ""
   textElement: any
 
+  @ViewChild('dialog')
+  dialog?: ElementRef;
+  dialogEl: any
+
   @Input() task: string = '';
   @Input() cardIndex: number = 0;
 
   className = ''
+  oldTitle: string = ''
 
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
     this.listService.doneList.subscribe((arr) => {
       this.addDoneToClass();
+      this.oldTitle = this.taskTitle
     });
   }
 
@@ -29,6 +37,8 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     this.textElement = this.textEl?.nativeElement
     this.taskTitle = this.textEl?.nativeElement.textContent.trim();
     this.addDoneToClass()
+
+    this.dialogEl = this.dialog?.nativeElement
   }
 
   onCheckboxSelect(e: any) {
@@ -61,7 +71,34 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   editTask(e: any) {
     e.preventDefault();
-    // let index = this.listService.value.myList.indexOf(this.taskTitle)
-    // this.listService.myList[index] = 'edited'
+    this.dialogEl.showModal()
+  }
+
+  closeDialog(e: any) {
+    e.preventDefault();
+    this.dialogEl.close()
+  }
+
+  editTitle(e: any) {
+    e.preventDefault();
+    console.log(e)
+    this.listService.myList.forEach(element => {
+      if (element == this.taskTitle) {
+        let index = this.listService.myList.indexOf(element)
+        this.listService.myList.splice(index, 1)
+        console.log(e.target[0].value)
+        this.listService.myList.splice(index, 0, e.target[0].value.trim())
+      }
+    })
+
+    this.dialogEl.close()
   }
 }
+
+
+// @NgModule({
+//   imports: [
+//     FormsModule
+//   ],
+// })
+// export class AppModule { }

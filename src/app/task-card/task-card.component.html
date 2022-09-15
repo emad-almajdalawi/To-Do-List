@@ -12,3 +12,13 @@
     <button class="del-btn btn {{cardIndex}}" (click)="deleteTask($event)">Del</button>
   </div>
 </div>
+
+<div class="dialog-container">
+  <dialog #dialog class="dialog-box">
+    <form (submit)="editTitle($event)">
+      <input type="text" class="edit-field">
+      <button type="submit" class="edit">Ok</button>
+      <button class="calcel" (click)="closeDialog($event)">Cancel</button>
+    </form>
+  </dialog>
+</div>
