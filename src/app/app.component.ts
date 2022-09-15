@@ -13,6 +13,14 @@ export class AppComponent implements OnInit {
   delSelEl?: ElementRef;
   delSelClassList: string[] = []
 
+  @ViewChild('form')
+  form?: ElementRef;
+  formEl: any
+
+  @ViewChild('selAllForm')
+  selAllForm?: ElementRef;
+  selAllFormEl: any
+
   constructor(public listService: TheListService) { }
 
   ngOnInit() {
@@ -20,15 +28,15 @@ export class AppComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.delSelClassList = this.delSelEl?.nativeElement.className
-    console.log(this.delSelClassList)
-    // if (this.listService.doneList.value.length > 0){
-    //   this.delSelClassList.remove
-    // }
+    this.formEl = this.form?.nativeElement
+    this.selAllFormEl = this.selAllForm?.nativeElement
   }
 
   onKeyEnter(e: any) {
     e.preventDefault();
     this.listService.myList.push(e.target.value)
+    this.formEl.reset()
+    this.selAllFormEl.reset()
   }
 
   onSelectAll(e: any) {
@@ -48,6 +56,7 @@ export class AppComponent implements OnInit {
 
   deleteAll(e: any) {
     this.listService.myList = [];
+    this.selAllFormEl.reset()
   }
 
   deleteSelected(e: any) {
@@ -65,5 +74,6 @@ export class AppComponent implements OnInit {
         this.listService.doneList.next(tempList)
       }
     })
+    this.selAllFormEl.reset()
   }
 }

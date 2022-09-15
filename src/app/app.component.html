@@ -7,14 +7,14 @@
     <div class="title">
       <h1>TODO LIST</h1>
       <div class="insertion">
-        <form class="insertion-form">
+        <form #form class="insertion-form">
           <input type="text" class="insertion-bar" placeholder="Things you want to do today?"
             (keydown.enter)="onKeyEnter($event)">
         </form>
       </div>
     </div>
     <div class="select-all">
-      <form class="select-all-form">
+      <form #selAllForm class="select-all-form">
         <input type="checkbox" class="select-all" (change)="onSelectAll($event)">
         <label>Sellect All</label>
       </form>
