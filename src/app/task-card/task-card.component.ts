@@ -1,7 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, NgModule, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { TheListService } from '../the-list.service';
-import { FormsModule } from '@angular/forms';
-import { VariableBinding } from '@angular/compiler';
 
 
 @Component({
@@ -19,10 +17,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   dialog?: ElementRef;
   dialogEl: any
 
-  @ViewChild('checkbox')
-  checkbox?: ElementRef;
-  checkboxEl: any
-
   @Input() task: string = '';
   @Input() cardIndex: number = 0;
   @Input() selectAllChecked!: boolean;
@@ -36,7 +30,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     this.listService.doneList.subscribe((arr) => {
       this.addDoneToClass();
     });
-    this.oldTitle = this.taskTitle
   }
 
   ngAfterViewInit(): void {
@@ -45,14 +38,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     this.addDoneToClass()
 
     this.dialogEl = this.dialog?.nativeElement
-
-    console.log('selectAllChecked', this.selectAllChecked);
-    // if (this.selectAllChecked) {
-    //   this.checkboxEl = this.checkbox?.nativeElement
-    //   console.log(this.checkboxEl.checked)
-    //   this.checkboxEl.checked = true
-    //   console.log(this.checkboxEl.checked)
-    // }
+    this.oldTitle = this.taskTitle
   }
 
   onCheckboxSelect(e: any) {
@@ -90,6 +76,8 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   closeDialog(e: any) {
     e.preventDefault();
+    this.oldTitle = this.taskTitle
+    this.ngAfterViewInit()
     this.dialogEl.close()
   }
 
@@ -103,15 +91,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
         this.listService.myList.splice(index, 0, e.target[0].value.trim())
       }
     })
-
     this.dialogEl.close()
   }
 }
-
-
-// @NgModule({
-//   imports: [
-//     FormsModule
-//   ],
-// })
-// export class AppModule { }

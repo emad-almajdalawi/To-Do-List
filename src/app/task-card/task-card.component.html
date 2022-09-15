@@ -17,9 +17,9 @@
 <div class="dialog-container">
   <dialog #dialog class="dialog-box">
     <form (submit)="editTitle($event)">
-      <input type="text" class="edit-field">
-      <button type="submit" class="edit">Ok</button>
-      <button class="calcel" (click)="closeDialog($event)">Cancel</button>
+      <input type="text" class="edit-field" [value]="oldTitle">
+      <button type="submit" class="edit btn">Ok</button>
+      <button class="calcel btn" (click)="closeDialog($event)">Cancel</button>
     </form>
   </dialog>
 </div>

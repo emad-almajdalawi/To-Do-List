@@ -37,3 +37,19 @@
 .done {
   text-decoration: line-through;
 }
+
+.dialog-box form {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.dialog-box input {
+  grid-column: 1 / span 2;
+  padding: 15px;
+}
+
+dialog:modal {
+  top: 35%;
+  left: 35%;
+}
