@@ -25,7 +25,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   @Input() task: string = '';
   @Input() cardIndex: number = 0;
-  @Input() selectAllChecked: boolean = false
+  @Input() selectAllChecked!: boolean;
 
   className = ''
   oldTitle: string = ''
@@ -46,12 +46,13 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
     this.dialogEl = this.dialog?.nativeElement
 
-    if (this.selectAllChecked) {
-      this.checkboxEl = this.checkbox?.nativeElement
-      console.log(this.checkboxEl.checked)
-      this.checkboxEl.checked = true
-      console.log(this.checkboxEl.checked)
-    }
+    console.log('selectAllChecked', this.selectAllChecked);
+    // if (this.selectAllChecked) {
+    //   this.checkboxEl = this.checkbox?.nativeElement
+    //   console.log(this.checkboxEl.checked)
+    //   this.checkboxEl.checked = true
+    //   console.log(this.checkboxEl.checked)
+    // }
   }
 
   onCheckboxSelect(e: any) {

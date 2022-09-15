@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="task" *ngFor="let t of listService.myList; let i=index">
-    <app-task-card [task]="t" [cardIndex]="i"></app-task-card>
+    <app-task-card [task]="t" [cardIndex]="i" [selectAllChecked]="selectAllChecked"></app-task-card>
   </div>
   <div class="footer">
     <div class="uncompleted-tasks">

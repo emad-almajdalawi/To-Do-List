@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   selAllForm?: ElementRef;
   selAllFormEl: any
 
-  selectAllChecked: boolean = false
+  selectAllChecked: boolean = false;
 
   constructor(public listService: TheListService) { }
 
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   onSelectAll(e: any) {
+    this.selectAllChecked = !this.selectAllChecked;
     e.preventDefault();
     let checked = e.target.checked
     if (checked) {
@@ -49,7 +50,6 @@ export class AppComponent implements OnInit {
         this.listService.doneList.next(
           [...this.listService.doneList.value, element]
         )
-        this.selectAllChecked = true
       })
     }
     else {
