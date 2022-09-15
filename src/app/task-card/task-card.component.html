@@ -1,7 +1,7 @@
 <div #taskCard class="task-card {{cardIndex}}">
   <div class="checkbox">
     <form>
-      <input type="checkbox" class="checkbox {{cardIndex}}" (change)="onCheckboxSelect($event)">
+      <input #checkbox type="checkbox" class="checkbox {{cardIndex}}" (change)="onCheckboxSelect($event)">
     </form>
   </div>
   <div #taskTitle class="task-title {{cardIndex}}" [ngClass]="className">

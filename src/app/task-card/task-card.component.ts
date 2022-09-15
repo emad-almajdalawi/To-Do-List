@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, NgModule, OnInit, ViewChild } from '@angular/core';
 import { TheListService } from '../the-list.service';
 import { FormsModule } from '@angular/forms';
+import { VariableBinding } from '@angular/compiler';
 
 
 @Component({
@@ -18,8 +19,13 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   dialog?: ElementRef;
   dialogEl: any
 
+  @ViewChild('checkbox')
+  checkbox?: ElementRef;
+  checkboxEl: any
+
   @Input() task: string = '';
   @Input() cardIndex: number = 0;
+  @Input() selectAllChecked: boolean = false
 
   className = ''
   oldTitle: string = ''
@@ -29,8 +35,8 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.listService.doneList.subscribe((arr) => {
       this.addDoneToClass();
-      this.oldTitle = this.taskTitle
     });
+    this.oldTitle = this.taskTitle
   }
 
   ngAfterViewInit(): void {
@@ -39,6 +45,13 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     this.addDoneToClass()
 
     this.dialogEl = this.dialog?.nativeElement
+
+    if (this.selectAllChecked) {
+      this.checkboxEl = this.checkbox?.nativeElement
+      console.log(this.checkboxEl.checked)
+      this.checkboxEl.checked = true
+      console.log(this.checkboxEl.checked)
+    }
   }
 
   onCheckboxSelect(e: any) {
@@ -86,7 +99,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
       if (element == this.taskTitle) {
         let index = this.listService.myList.indexOf(element)
         this.listService.myList.splice(index, 1)
-        console.log(e.target[0].value)
         this.listService.myList.splice(index, 0, e.target[0].value.trim())
       }
     })
