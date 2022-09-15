@@ -20,7 +20,11 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
+    this.listService.doneList.subscribe((arr) => {
+      this.addDoneToClass();
+    });
   }
+
 
   ngAfterViewInit(): void {
     this.textElement = this.textEl?.nativeElement
@@ -32,18 +36,18 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     e.preventDefault();
     let checked = e.target.checked
     if (checked) {
-      this.listService.doneList.push(this.taskTitle)
+      this.listService.doneList.value.push(this.taskTitle)
     }
-    else if (this.listService.doneList.includes(this.taskTitle)) {
-      let index = this.listService.doneList.indexOf(this.taskTitle)
-      this.listService.doneList.splice(index, 1)
+    else if (this.listService.doneList.value.includes(this.taskTitle)) {
+      let index = this.listService.doneList.value.indexOf(this.taskTitle)
+      this.listService.doneList.value.splice(index, 1)
     }
 
     this.addDoneToClass();
   }
 
   addDoneToClass() {
-    if (this.listService.doneList.includes(this.taskTitle)) {
+    if (this.listService.doneList.value.includes(this.taskTitle)) {
       this.className = "done"
     } else {
       this.className = ''
@@ -71,5 +75,11 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     e.preventDefault();
     let index = this.listService.myList.indexOf(this.taskTitle)
     this.listService.myList.splice(index, 1)
+  }
+
+  editTask(e: any) {
+    e.preventDefault();
+    // let index = this.listService.value.myList.indexOf(this.taskTitle)
+    // this.listService.myList[index] = 'edited'
   }
 }

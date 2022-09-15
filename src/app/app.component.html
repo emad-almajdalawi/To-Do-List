@@ -20,11 +20,16 @@
       </form>
     </div>
   </div>
-  <div class="task" *ngFor="let t of tasks; let i=index">
+  <div class="task" *ngFor="let t of listService.myList; let i=index">
     <app-task-card [task]="t" [cardIndex]="i"></app-task-card>
   </div>
-  <div class="uncompleted-tasks">
-    <p>{{tasks.length}} uncompleted tasks</p>
+  <div class="footer">
+    <div class="uncompleted-tasks">
+      <p>{{listService.myList.length}} uncompleted tasks</p>
+    </div>
+    <div class="deleteAll">
+      <button class="del-all-btn btn" (click)="deleteAll($event)">Delete All</button>
+    </div>
   </div>
   <div class="completed-tasks">
   </div>

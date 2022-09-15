@@ -14,8 +14,6 @@ h1 {
   margin: 100px;
 }
 
-.date-time {}
-
 .header {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
@@ -32,4 +30,21 @@ input {
   padding: 5px;
   display: grid;
   grid-template-columns: 1fr 3fr;
+}
+
+.btn {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 15px;
+}
+
+.del-all-btn {
+  background: lightcoral;
+}
+
+.footer {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
 }

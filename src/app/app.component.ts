@@ -8,13 +8,10 @@ import { TheListService } from './the-list.service';
 })
 export class AppComponent implements OnInit {
   title: string = 'toDoList';
-  tasks: string[] = [];
-  SelectAllClassName = ''
 
   constructor(public listService: TheListService) { }
 
   ngOnInit() {
-    this.tasks = this.listService.myList
   }
 
   onKeyEnter(e: any) {
@@ -27,12 +24,18 @@ export class AppComponent implements OnInit {
     let checked = e.target.checked
     if (checked) {
       this.listService.myList.forEach(element => {
-        console.log(element)
-        this.listService.doneList.push(element)
+
+        this.listService.doneList.next(
+          [...this.listService.doneList.value, element]
+        )
       })
     }
     else {
-      this.listService.doneList = []
+      this.listService.doneList.next([])
     }
+  }
+
+  deleteAll(e: any) {
+    this.listService.myList = [];
   }
 }
