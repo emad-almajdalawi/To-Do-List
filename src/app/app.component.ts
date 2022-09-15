@@ -9,19 +9,22 @@ import { TheListService } from './the-list.service';
 export class AppComponent implements OnInit {
   title: string = 'toDoList';
 
-  // @ViewChild('delSelected')
-  // delSelEl?: ElementRef;
-  // delSelClassList: string[] = []
+  @ViewChild('delSelected')
+  delSelEl?: ElementRef;
+  delSelClassList: string[] = []
 
   constructor(public listService: TheListService) { }
 
   ngOnInit() {
   }
 
-  // ngAfterViewInit(): void {
-  //   this.delSelClassList = this.delSelEl?.nativeElement.className
-  //   console.log(this.delSelClassList)
-  // }
+  ngAfterViewInit(): void {
+    this.delSelClassList = this.delSelEl?.nativeElement.className
+    console.log(this.delSelClassList)
+    // if (this.listService.doneList.value.length > 0){
+    //   this.delSelClassList.remove
+    // }
+  }
 
   onKeyEnter(e: any) {
     e.preventDefault();
@@ -53,6 +56,13 @@ export class AppComponent implements OnInit {
         console.log(element)
         let index = this.listService.myList.indexOf(element)
         this.listService.myList.splice(index, 1)
+        let tempList: string[] = []
+        this.listService.doneList.value.forEach((item) => {
+          tempList.push(item)
+        })
+        let index2 = tempList.indexOf(element)
+        tempList.splice(index, 1)
+        this.listService.doneList.next(tempList)
       }
     })
   }

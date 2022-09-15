@@ -55,6 +55,6 @@ input {
   justify-content: space-between;
 }
 
-.del-selected {
-  /* visibility: hidden; */
+.hidden {
+  visibility: hidden;
 }

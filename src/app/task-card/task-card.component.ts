@@ -36,15 +36,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     let checked = e.target.checked
     if (checked) {
       this.listService.doneList.value.push(this.taskTitle)
-      this.listService.checked.push(this.taskTitle)
     }
     else if (this.listService.doneList.value.includes(this.taskTitle)) {
       let index = this.listService.doneList.value.indexOf(this.taskTitle)
       this.listService.doneList.value.splice(index, 1)
-    }
-    else if (this.listService.checked.includes(this.taskTitle)) {
-      let index = this.listService.doneList.value.indexOf(this.taskTitle)
-      this.listService.checked.splice(index, 1)
     }
 
     this.addDoneToClass();

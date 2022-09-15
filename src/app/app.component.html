@@ -28,7 +28,8 @@
       <p>{{listService.myList.length}} uncompleted tasks</p>
     </div>
     <div class="delete-selected" (click)="deleteSelected($event)">
-      <button #delSelected class="del-btn btn del-selected">Delete Selected</button>
+      <button #delSelected class="del-btn btn del-selected"
+        [ngClass]="listService.doneList.value.length>1? '' : 'hidden'">Delete Selected</button>
       <button class="del-btn btn" (click)="deleteAll($event)">Delete All</button>
     </div>
   </div>
