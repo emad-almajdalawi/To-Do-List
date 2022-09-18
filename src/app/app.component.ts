@@ -45,9 +45,12 @@ export class AppComponent {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
 
-    this.listService.myList.value.forEach((task: Task) => {
+    const theSameList: Task[] = this.listService.myList.value.map((task: Task) => {
       isChecked ? task.checked = true : task.checked = false;
-    })
+
+      return task;
+    });
+    this.listService.myList.next(theSameList);
   }
 
   deleteAll() {

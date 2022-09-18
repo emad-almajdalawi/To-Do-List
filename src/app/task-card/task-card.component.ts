@@ -28,6 +28,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.listService.myList.subscribe((arr) => {
       this.addDoneToClass();
+      console.log('paolo');
     });
   }
 
