@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { TheListService } from '../the-list.service';
+import { TheListService, Task } from '../the-list.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   dialog?: ElementRef;
   dialogEl: any
 
-  @Input() task: string = '';
+  @Input() task: Task;
   @Input() cardIndex: number = 0;
   @Input() selectAllChecked!: boolean;
 
@@ -26,7 +26,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
-    this.listService.doneList.subscribe((arr) => {
+    this.listService.myList.subscribe((arr) => {
       this.addDoneToClass();
     });
   }
@@ -40,23 +40,12 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   }
 
   onCheckboxSelect(e: any): void {
-    e.preventDefault();
-    let checked = e.target.checked;
-    if (checked) {
-      this.listService.doneList.next(
-        [...this.listService.doneList.value, this.taskTitle]
-      );
-    }
-    else {
-      let index = this.listService.doneList.value.indexOf(this.taskTitle);
-      this.listService.doneList.value.splice(index, 1);
-    }
-
+    this.task.checked = e.target.checked;
     this.addDoneToClass();
   }
 
   addDoneToClass() {
-    if (this.listService.doneList.value.includes(this.taskTitle)) {
+    if (this.task.checked) {
       this.className = 'done';
     } else {
       this.className = '';
@@ -65,13 +54,8 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   deleteTask(e: Event) {
     e.preventDefault();
-    let index = this.listService.myList.indexOf(this.taskTitle);
-    this.listService.myList.splice(index, 1);
-
-    if (this.listService.doneList.value.includes(this.taskTitle)) {
-      let index = this.listService.doneList.value.indexOf(this.taskTitle);
-      this.listService.doneList.value.splice(index, 1);
-    };
+    let index = this.listService.myList.value.indexOf(this.task);
+    this.listService.myList.value.splice(index, 1);
   }
 
   editTask() {
@@ -84,10 +68,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   editTitle(e: any): void {
     e.preventDefault();
-    let index = this.listService.myList.indexOf(this.taskTitle);
-
-    this.listService.myList.splice(index, 1);
-    this.listService.myList.splice(index, 0, e.target.inp.value);
+    this.task.title = e.target.inp.value;
     this.closeDialog();
   }
 }

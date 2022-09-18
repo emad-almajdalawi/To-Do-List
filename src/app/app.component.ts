@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { TheListService } from './the-list.service';
+import { TheListService, Task } from './the-list.service';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +35,7 @@ export class AppComponent {
 
   onKeyEnter(e: any) {
     e.preventDefault();
-    this.listService.myList.push(e.target.value)
+    this.listService.myList.value.push({ title: e.target.value, done: false, checked: false })
     this.formEl.reset()
     this.selAllFormEl.reset()
   }
@@ -43,35 +43,24 @@ export class AppComponent {
   onSelectAll(e: any) {
     this.selectAllChecked = !this.selectAllChecked;
     e.preventDefault();
-    let checked = e.target.checked
-    if (checked) {
-      this.listService.doneList.next(this.listService.myList);
-    }
-    else {
-      this.listService.doneList.next([])
-    }
+    const isChecked: boolean = e.target.checked;
+
+    this.listService.myList.value.forEach((task: Task) => {
+      isChecked ? task.checked = true : task.checked = false;
+    })
   }
 
   deleteAll() {
-    this.listService.myList = [];
+    this.listService.myList.next([]);
     this.selAllFormEl.reset()
   }
 
   deleteSelected(e: any) {
-    this.listService.doneList.value.forEach(element => {
-      if (this.listService.myList.includes(element)) {
-        console.log(element)
-        let index = this.listService.myList.indexOf(element)
-        this.listService.myList.splice(index, 1)
-        let tempList: string[] = []
-        this.listService.doneList.value.forEach((item) => {
-          tempList.push(item)
-        })
-        let index2 = tempList.indexOf(element)
-        tempList.splice(index, 1)
-        this.listService.doneList.next(tempList)
-      }
-    })
+    const notChecked: any = this.listService.myList.value.filter((task: Task) => {
+      return !task.checked;
+    });
+    this.listService.myList.next(notChecked);
+
     this.selAllFormEl.reset()
   }
 }

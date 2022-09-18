@@ -20,16 +20,16 @@
       </form>
     </div>
   </div>
-  <div class="task" *ngFor="let t of listService.myList; let i=index">
+  <div class="task" *ngFor="let t of listService.myList.value; let i=index">
     <app-task-card [task]="t" [cardIndex]="i" [selectAllChecked]="selectAllChecked"></app-task-card>
   </div>
   <div class="footer">
     <div class="uncompleted-tasks">
-      <p>{{listService.myList.length}} uncompleted tasks</p>
+      <p>{{listService.myList.value.length}} uncompleted tasks</p>
     </div>
     <div class="delete-selected" (click)="deleteSelected($event)">
       <button #delSelected class="del-btn btn del-selected" [ngClass]="{
-            'hidden': listService.doneList.value.length < 1
+            'hidden': listService.myList.value.length < 1
           }">Delete Selected</button>
       <button class="del-btn btn" (click)="deleteAll()">Delete All</button>
     </div>
