@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TheListService } from './the-list.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { TheListService } from './the-list.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title: string = 'toDoList';
 
   @ViewChild('delSelected')
@@ -23,10 +23,9 @@ export class AppComponent implements OnInit {
 
   selectAllChecked: boolean = false;
 
-  constructor(public listService: TheListService) { }
-
-  ngOnInit() {
-  }
+  constructor(
+    public listService: TheListService
+  ) { }
 
   ngAfterViewInit(): void {
     this.delSelClassList = this.delSelEl?.nativeElement.className
@@ -46,18 +45,14 @@ export class AppComponent implements OnInit {
     e.preventDefault();
     let checked = e.target.checked
     if (checked) {
-      this.listService.myList.forEach(element => {
-        this.listService.doneList.next(
-          [...this.listService.doneList.value, element]
-        )
-      })
+      this.listService.doneList.next(this.listService.myList);
     }
     else {
       this.listService.doneList.next([])
     }
   }
 
-  deleteAll(e: any) {
+  deleteAll() {
     this.listService.myList = [];
     this.selAllFormEl.reset()
   }

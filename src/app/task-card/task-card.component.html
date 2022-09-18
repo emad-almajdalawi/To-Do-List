@@ -1,15 +1,15 @@
-<div #taskCard class="task-card {{cardIndex}}">
+<div class="task-card {{cardIndex}}">
   <div class="checkbox">
     <form>
-      <input #checkbox type="checkbox" class="checkbox {{cardIndex}}" [checked]="selectAllChecked"
+      <input type="checkbox" class="checkbox {{cardIndex}}" [checked]="selectAllChecked"
         (change)="onCheckboxSelect($event)">
     </form>
   </div>
-  <div #taskTitle class="task-title {{cardIndex}}" [ngClass]="className">
+  <div #taskTitle11 class="task-title {{className}} {{cardIndex}}">
     {{task}}
   </div>
   <div class="buttons {{cardIndex}}">
-    <button class="edit-btn btn {{cardIndex}}" (click)="editTask($event)">Edit</button>
+    <button class="edit-btn btn {{cardIndex}}" (click)="editTask()">Edit</button>
     <button class="del-btn btn {{cardIndex}}" (click)="deleteTask($event)">Del</button>
   </div>
 </div>
@@ -17,9 +17,9 @@
 <div class="dialog-container">
   <dialog #dialog class="dialog-box">
     <form (submit)="editTitle($event)">
-      <input type="text" class="edit-field" [value]="oldTitle">
+      <input name="inp" type="text" class="edit-field" [value]="taskTitle">
       <button type="submit" class="edit btn">Ok</button>
-      <button class="calcel btn" (click)="closeDialog($event)">Cancel</button>
+      <button type="button" class="canlce btn" (click)="closeDialog()">Cancel</button>
     </form>
   </dialog>
 </div>

@@ -8,7 +8,7 @@ import { TheListService } from '../the-list.service';
   styleUrls: ['./task-card.component.css']
 })
 export class TaskCardComponent implements OnInit, AfterViewInit {
-  @ViewChild('taskTitle')
+  @ViewChild('taskTitle11')
   textEl?: ElementRef;
   taskTitle: string = ""
   textElement: any
@@ -21,8 +21,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   @Input() cardIndex: number = 0;
   @Input() selectAllChecked!: boolean;
 
-  className = ''
-  oldTitle: string = ''
+  className = '';
 
   constructor(public listService: TheListService) { }
 
@@ -33,23 +32,24 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.textElement = this.textEl?.nativeElement
+    this.textElement = this.textEl?.nativeElement;
     this.taskTitle = this.textEl?.nativeElement.textContent.trim();
-    this.addDoneToClass()
+    this.addDoneToClass();
 
-    this.dialogEl = this.dialog?.nativeElement
-    this.oldTitle = this.taskTitle
+    this.dialogEl = this.dialog?.nativeElement;
   }
 
-  onCheckboxSelect(e: any) {
+  onCheckboxSelect(e: any): void {
     e.preventDefault();
-    let checked = e.target.checked
+    let checked = e.target.checked;
     if (checked) {
-      this.listService.doneList.value.push(this.taskTitle)
+      this.listService.doneList.next(
+        [...this.listService.doneList.value, this.taskTitle]
+      );
     }
-    else if (this.listService.doneList.value.includes(this.taskTitle)) {
-      let index = this.listService.doneList.value.indexOf(this.taskTitle)
-      this.listService.doneList.value.splice(index, 1)
+    else {
+      let index = this.listService.doneList.value.indexOf(this.taskTitle);
+      this.listService.doneList.value.splice(index, 1);
     }
 
     this.addDoneToClass();
@@ -57,40 +57,37 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   addDoneToClass() {
     if (this.listService.doneList.value.includes(this.taskTitle)) {
-      this.className = "done"
+      this.className = 'done';
     } else {
-      this.className = ''
+      this.className = '';
     }
   }
 
-  deleteTask(e: any) {
+  deleteTask(e: Event) {
     e.preventDefault();
-    let index = this.listService.myList.indexOf(this.taskTitle)
-    this.listService.myList.splice(index, 1)
+    let index = this.listService.myList.indexOf(this.taskTitle);
+    this.listService.myList.splice(index, 1);
+
+    if (this.listService.doneList.value.includes(this.taskTitle)) {
+      let index = this.listService.doneList.value.indexOf(this.taskTitle);
+      this.listService.doneList.value.splice(index, 1);
+    };
   }
 
-  editTask(e: any) {
-    e.preventDefault();
-    this.dialogEl.showModal()
+  editTask() {
+    this.dialogEl.showModal();
   }
 
-  closeDialog(e: any) {
-    e.preventDefault();
-    this.oldTitle = this.taskTitle
-    this.ngAfterViewInit()
-    this.dialogEl.close()
+  closeDialog() {
+    this.dialogEl.close();
   }
 
-  editTitle(e: any) {
+  editTitle(e: any): void {
     e.preventDefault();
-    console.log(e)
-    this.listService.myList.forEach(element => {
-      if (element == this.taskTitle) {
-        let index = this.listService.myList.indexOf(element)
-        this.listService.myList.splice(index, 1)
-        this.listService.myList.splice(index, 0, e.target[0].value.trim())
-      }
-    })
-    this.dialogEl.close()
+    let index = this.listService.myList.indexOf(this.taskTitle);
+
+    this.listService.myList.splice(index, 1);
+    this.listService.myList.splice(index, 0, e.target.inp.value);
+    this.closeDialog();
   }
 }

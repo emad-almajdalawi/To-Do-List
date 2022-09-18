@@ -7,11 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class TheListService {
 
   myList: string[] = ['task1', 'task2', 'task3'];
-  doneList: BehaviorSubject<string[]> = new BehaviorSubject(['']);
-
-  printing() {
-    console.log(this.myList)
-  }
+  doneList: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
   constructor() { }
 }
