@@ -7,7 +7,7 @@
     <div class="title">
       <h1>TODO LIST</h1>
       <div class="insertion">
-        <form #form class="insertion-form">
+        <form #insertionForm class="insertion-form">
           <input type="text" class="insertion-bar" placeholder="Things you want to do today?"
             (keydown.enter)="onKeyEnter($event)">
         </form>
@@ -15,21 +15,23 @@
     </div>
     <div class="select-all">
       <form #selAllForm class="select-all-form">
-        <input type="checkbox" class="select-all" (change)="onSelectAll($event)">
+        <input type="checkbox" class="select-all" [checked]="selectedCounter == listService.myList.value.length"
+          (change)="onSelectAll($event)">
         <label>Sellect All</label>
       </form>
     </div>
   </div>
-  <div class="task" *ngFor="let t of listService.myList.value; let i=index">
-    <app-task-card [task]="t" [cardIndex]="i" [selectAllChecked]="selectAllChecked"></app-task-card>
+  <div class="task" *ngFor="let t of listService.myList.value">
+    <app-task-card [(selectedCounter)]="selectedCounter" [task]="t">
+    </app-task-card>
   </div>
   <div class="footer">
     <div class="uncompleted-tasks">
       <p>{{listService.myList.value.length}} uncompleted tasks</p>
     </div>
-    <div class="delete-selected" (click)="deleteSelected($event)">
+    <div class="delete-selected" (click)="deleteSelected()">
       <button #delSelected class="del-btn btn del-selected" [ngClass]="{
-            'hidden': listService.myList.value.length < 1
+            'hidden': selectedCounter < 1
           }">Delete Selected</button>
       <button class="del-btn btn" (click)="deleteAll()">Delete All</button>
     </div>

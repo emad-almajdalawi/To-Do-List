@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { TheListService, Task } from '../the-list.service';
 
 
@@ -8,44 +8,53 @@ import { TheListService, Task } from '../the-list.service';
   styleUrls: ['./task-card.component.css']
 })
 export class TaskCardComponent implements OnInit, AfterViewInit {
-  @ViewChild('taskTitle11')
-  textEl?: ElementRef;
-  taskTitle: string = ""
-  textElement: any
 
   @ViewChild('dialog')
   dialog?: ElementRef;
   dialogEl: any
 
-  @Input() task: Task;
-  @Input() cardIndex: number = 0;
-  @Input() selectAllChecked!: boolean;
+  @ViewChild('editInput')
+  editInput?: ElementRef;
+  editInputEl: any
 
-  className = '';
+  @Input() task: Task;
+  @Input() selectAllChecked: boolean;
+  @Input() selectedCounter: number;
+
+  @Output() selectedCounterChange = new EventEmitter<number>();
+
+  className: string = '';
 
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
     this.listService.myList.subscribe((arr) => {
       this.addDoneToClass();
-      console.log('paolo');
     });
   }
 
   ngAfterViewInit(): void {
-    this.textElement = this.textEl?.nativeElement;
-    this.taskTitle = this.textEl?.nativeElement.textContent.trim();
     this.addDoneToClass();
-
     this.dialogEl = this.dialog?.nativeElement;
+    this.editInputEl = this.editInput?.nativeElement
   }
 
+  /**
+   * Assign "true" or "false" as a value of "checked" attribute in the "Task" object of the same card.
+   * @param {any} e The event element
+   */
   onCheckboxSelect(e: any): void {
     this.task.checked = e.target.checked;
     this.addDoneToClass();
+
+    e.target.checked ? this.selectedCounter++ : this.selectedCounter--;
+    this.selectedCounterChange.emit(this.selectedCounter);
   }
 
-  addDoneToClass() {
+  /**
+   * Add the class "done" to the task's title in the same card if it is checked.
+   */
+  addDoneToClass(): void {
     if (this.task.checked) {
       this.className = 'done';
     } else {
@@ -53,23 +62,38 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteTask(e: Event) {
+  /**
+   *Delete the task of the same card.
+   * @param {Event} e The event's element
+   */
+  deleteTask(e: Event): void {
     e.preventDefault();
     let index = this.listService.myList.value.indexOf(this.task);
     this.listService.myList.value.splice(index, 1);
   }
 
-  editTask() {
+  /**
+   * Edite task's title of the same card
+   */
+  editTask(): void {
     this.dialogEl.showModal();
   }
 
-  closeDialog() {
+  /**
+   * Close the dialog box
+   */
+  closeDialog(): void {
     this.dialogEl.close();
+    this.editInputEl.value = this.task.title;
   }
 
-  editTitle(e: any): void {
+  /**
+   * Edit the task's title of the same card
+   * @param {Event} e The event's element
+   */
+  editTitle(e: Event): void {
     e.preventDefault();
-    this.task.title = e.target.inp.value;
+    this.task.title = e.target['inp'].value;
     this.closeDialog();
   }
 }

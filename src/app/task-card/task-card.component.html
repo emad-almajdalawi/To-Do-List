@@ -1,23 +1,22 @@
-<div class="task-card {{cardIndex}}">
+<div class="task-card ">
   <div class="checkbox">
     <form>
-      <input type="checkbox" class="checkbox {{cardIndex}}" [checked]="selectAllChecked"
-        (change)="onCheckboxSelect($event)">
+      <input type="checkbox" class="checkbox " [checked]="task.checked" (change)="onCheckboxSelect($event)">
     </form>
   </div>
-  <div #taskTitle11 class="task-title {{className}} {{cardIndex}}">
+  <div class="task-title {{className}} ">
     {{task.title}}
   </div>
-  <div class="buttons {{cardIndex}}">
-    <button class="edit-btn btn {{cardIndex}}" (click)="editTask()">Edit</button>
-    <button class="del-btn btn {{cardIndex}}" (click)="deleteTask($event)">Del</button>
+  <div class="buttons ">
+    <button class="edit-btn btn " (click)="editTask()">Edit</button>
+    <button class="del-btn btn " (click)="deleteTask($event)">Del</button>
   </div>
 </div>
 
 <div class="dialog-container">
   <dialog #dialog class="dialog-box">
     <form (submit)="editTitle($event)">
-      <input name="inp" type="text" class="edit-field" [value]="taskTitle">
+      <input #editInput name="inp" type="text" class="edit-field" [value]="task.title">
       <button type="submit" class="edit btn">Ok</button>
       <button type="button" class="canlce btn" (click)="closeDialog()">Cancel</button>
     </form>
