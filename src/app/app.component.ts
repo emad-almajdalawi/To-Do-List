@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { __values } from 'tslib';
-import { TheListService, Task } from './the-list.service';
+import { TheListService, TaskDB, AddTaskDB } from './the-list.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +24,12 @@ export class AppComponent {
     public listService: TheListService
   ) { }
 
+  ngOnInit(): void {
+    this.listService.getTasks().subscribe((data: TaskDB[]) => {
+      this.listService.myList.next(data);
+    });
+  }
+
   ngAfterViewInit(): void {
     this.formEl = this.form?.nativeElement
     this.selAllFormEl = this.selAllForm?.nativeElement
@@ -35,7 +41,8 @@ export class AppComponent {
    */
   onKeyEnter(e: any): void {
     e.preventDefault();
-    this.listService.myList.value.push({ title: e.target.value, checked: false })
+    // this.listService.myList.value.push({ title: e.target.value, done: false })
+    this.listService.addTask({ title: e.target.value, done: false })
     this.formEl.reset()
     this.selAllFormEl.reset()
   }
@@ -48,8 +55,8 @@ export class AppComponent {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
 
-    const newList: Task[] = this.listService.myList.value.map((task: Task) => {
-      isChecked ? task.checked = true : task.checked = false;
+    const newList: TaskDB[] = this.listService.myList.value.map((task: TaskDB) => {
+      isChecked ? task.done = true : task.done = false;
 
       return task;
     });
@@ -70,8 +77,8 @@ export class AppComponent {
    * Delete all selected tasks.
    */
   deleteSelected(): void {
-    const notChecked: any = this.listService.myList.value.filter((task: Task) => {
-      return !task.checked;
+    const notChecked: any = this.listService.myList.value.filter((task: TaskDB) => {
+      return !task.done;
     });
     this.listService.myList.next(notChecked);
 

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { TheListService, Task } from '../the-list.service';
+import { TheListService, TaskDB, AddTaskDB } from '../the-list.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   editInput?: ElementRef;
   editInputEl: any
 
-  @Input() task: Task;
+  @Input() task: TaskDB;
   @Input() selectAllChecked: boolean;
   @Input() selectedCounter: number;
 
@@ -44,7 +44,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    * @param {any} e The event element
    */
   onCheckboxSelect(e: any): void {
-    this.task.checked = e.target.checked;
+    this.task.done = e.target.checked;
     this.addDoneToClass();
 
     e.target.checked ? this.selectedCounter++ : this.selectedCounter--;
@@ -55,7 +55,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    * Add the class "done" to the task's title in the same card if it is checked.
    */
   addDoneToClass(): void {
-    if (this.task.checked) {
+    if (this.task.done) {
       this.className = 'done';
     } else {
       this.className = '';
@@ -68,8 +68,12 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   deleteTask(e: Event): void {
     e.preventDefault();
-    let index = this.listService.myList.value.indexOf(this.task);
-    this.listService.myList.value.splice(index, 1);
+    // let index = this.listService.myList.value.indexOf(this.task);
+    // this.listService.myList.value.splice(index, 1);
+    let theTask = this.listService.myList.value.filter((task: TaskDB) => {
+      return task._id == this.task._id;
+    })
+    this.listService.deleteTask(theTask[0]._id)
   }
 
   /**
@@ -93,7 +97,11 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   editTitle(e: Event): void {
     e.preventDefault();
-    this.task.title = e.target['inp'].value;
+    // this.task.title = e.target['inp'].value;
+    let theTask = this.listService.myList.value.filter((task: TaskDB) => {
+      return task._id == this.task._id;
+    })
+    this.listService.updateTask(theTask[0]._id, { title: e.target['inp'].value, done: theTask[0].done })
     this.closeDialog();
   }
 }
