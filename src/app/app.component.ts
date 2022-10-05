@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { __values } from 'tslib';
-import { TheListService, TaskDB, AddTaskDB } from './the-list.service';
+import { TheListService, TaskDB, TaskNewId } from './the-list.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +26,14 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.listService.getTasks().subscribe((data: TaskDB[]) => {
-      this.listService.myList.next(data);
+      let renamedId = [];
+      data.forEach(element => {
+        let newObj = {};
+        newObj = this.renameId(element)
+        renamedId.push(newObj)
+      })
+      this.listService.myList.next(renamedId);
+      console.log(renamedId)
     });
   }
 
@@ -55,7 +62,7 @@ export class AppComponent {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
 
-    const newList: TaskDB[] = this.listService.myList.value.map((task: TaskDB) => {
+    const newList: TaskNewId[] = this.listService.myList.value.map((task: TaskNewId) => {
       isChecked ? task.done = true : task.done = false;
 
       return task;
@@ -77,11 +84,21 @@ export class AppComponent {
    * Delete all selected tasks.
    */
   deleteSelected(): void {
-    const notChecked: any = this.listService.myList.value.filter((task: TaskDB) => {
+    const notChecked: any = this.listService.myList.value.filter((task: TaskNewId) => {
       return !task.done;
     });
     this.listService.myList.next(notChecked);
 
     this.selAllFormEl.reset()
+  }
+
+  renameId(oldData: TaskDB): any {
+    let newData = {}
+    const kyes = ['title', 'done']
+    newData['id'] = oldData["_id"]['$oid'].toString()
+    kyes.forEach(feild_key => {
+      newData[feild_key] = oldData[feild_key]
+    });
+    return newData
   }
 }

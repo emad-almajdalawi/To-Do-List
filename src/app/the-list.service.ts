@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -19,6 +19,18 @@ export interface AddTaskDB {
   done: boolean
 }
 
+export interface PostResponse {
+  data: TaskNewId,
+  message: string,
+  status: string
+}
+
+export interface TaskNewId {
+  title: string,
+  done: boolean,
+  id: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +38,7 @@ export class TheListService {
 
   baseUrl: string = 'http://127.0.0.1:5000'
 
-  myList: BehaviorSubject<TaskDB[]> = new BehaviorSubject([])
+  myList: BehaviorSubject<TaskNewId[]> = new BehaviorSubject([])
 
 
   constructor(
@@ -34,21 +46,34 @@ export class TheListService {
   ) { }
 
   getTasks(): Observable<TaskDB[]> {
-    return this.http.get<TaskDB[]>(this.baseUrl + '/tasks.json');
+    return this.http.get<TaskDB[]>(this.baseUrl + '/tasks.json')
   }
 
   addTask(body: AddTaskDB): void {
-    this.http.post<AddTaskDB>(this.baseUrl + '/task/add', body);
-    this.getTasks()
+    this.http.post<PostResponse>(this.baseUrl + '/task/add', body)
+      .subscribe(res => {
+        console.log(res)
+        this.myList.next([...this.myList.value, res.data]);
+      });
   }
 
-  deleteTask(id: string): void {
-    this.http.post(this.baseUrl + `/task/delete/${id}`, null);
-    this.getTasks()
+  updateTask(id: string, body: AddTaskDB, task: TaskNewId): void {
+    this.http.post<PostResponse>(this.baseUrl + `/task/update/${id}`, body)
+      .subscribe(res => {
+        console.log(res)
+        const index = this.myList.value.indexOf(task);
+        this.myList.value.splice(index, 1, res.data);
+      });
   }
 
-  updateTask(id: string, body: AddTaskDB): void {
-    this.http.post(this.baseUrl + `/task/update/${id}`, body);
-    this.getTasks()
+  deleteTask(id: string, task: TaskNewId): void {
+    this.http.post<PostResponse>(this.baseUrl + `/task/delete/${id}`, null)
+      .subscribe(res => {
+        console.log(res)
+        // console.log('task from servace', task)
+        const index = this.myList.value.indexOf(task);
+        this.myList.value.splice(index, 1);
+      });
   }
+
 }

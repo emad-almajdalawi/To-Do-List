@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { TheListService, TaskDB, AddTaskDB } from '../the-list.service';
+import { TheListService, TaskDB, TaskNewId } from '../the-list.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   editInput?: ElementRef;
   editInputEl: any
 
-  @Input() task: TaskDB;
+  @Input() task: TaskNewId;
   @Input() selectAllChecked: boolean;
   @Input() selectedCounter: number;
 
@@ -70,10 +70,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     e.preventDefault();
     // let index = this.listService.myList.value.indexOf(this.task);
     // this.listService.myList.value.splice(index, 1);
-    let theTask = this.listService.myList.value.filter((task: TaskDB) => {
-      return task._id == this.task._id;
+    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
+      return task.id == this.task.id;
     })
-    this.listService.deleteTask(theTask[0]._id)
+    this.listService.deleteTask(theTask[0].id, theTask[0])
   }
 
   /**
@@ -98,10 +98,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   editTitle(e: Event): void {
     e.preventDefault();
     // this.task.title = e.target['inp'].value;
-    let theTask = this.listService.myList.value.filter((task: TaskDB) => {
-      return task._id == this.task._id;
+    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
+      return task.id == this.task.id;
     })
-    this.listService.updateTask(theTask[0]._id, { title: e.target['inp'].value, done: theTask[0].done })
+    this.listService.updateTask(theTask[0].id, { title: e.target['inp'].value, done: theTask[0].done }, theTask[0])
     this.closeDialog();
   }
 }
