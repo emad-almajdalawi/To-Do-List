@@ -1,7 +1,7 @@
 <div class="task-card ">
   <div class="checkbox">
     <form>
-      <input type="checkbox" class="checkbox " [checked]="task.checked" (change)="onCheckboxSelect($event)">
+      <input type="checkbox" class="checkbox " [checked]="task.done" (change)="onCheckboxSelect($event)">
     </form>
   </div>
   <div class="task-title {{className}} ">

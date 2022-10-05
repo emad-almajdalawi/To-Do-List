@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { __values } from 'tslib';
-import { TheListService, Task } from './the-list.service';
+import { TheListService, TaskDB, TaskNewId } from './the-list.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +24,24 @@ export class AppComponent {
     public listService: TheListService
   ) { }
 
+  ngOnInit(): void {
+    this.listService.getTasks().subscribe((data: TaskDB[]) => {
+      let renamedId = [];
+      data.forEach(element => {
+        let newObj = {};
+        newObj = this.listService.renameId(element)
+        renamedId.push(newObj)
+      })
+      this.listService.myList.next(renamedId);
+      console.log(renamedId)
+      this.listService.myList.value.forEach(element => {
+        if (element.done) {
+          this.selectedCounter += 1
+        }
+      })
+    });
+  }
+
   ngAfterViewInit(): void {
     this.formEl = this.form?.nativeElement
     this.selAllFormEl = this.selAllForm?.nativeElement
@@ -35,7 +53,7 @@ export class AppComponent {
    */
   onKeyEnter(e: any): void {
     e.preventDefault();
-    this.listService.myList.value.push({ title: e.target.value, checked: false })
+    this.listService.addTask({ title: e.target.value, done: false })
     this.formEl.reset()
     this.selAllFormEl.reset()
   }
@@ -44,12 +62,13 @@ export class AppComponent {
    * Assign "true" or "false" as a value of "checked" attribute in all "Task" objects.
    * @param {any} e The event's element
    */
-  onSelectAll(e: any): void {
+  onAllDone(e: any): void {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
+    this.listService.allDone(isChecked)
 
-    const newList: Task[] = this.listService.myList.value.map((task: Task) => {
-      isChecked ? task.checked = true : task.checked = false;
+    const newList: TaskNewId[] = this.listService.myList.value.map((task: TaskNewId) => {
+      isChecked ? task.done = true : task.done = false;
 
       return task;
     });
@@ -62,19 +81,15 @@ export class AppComponent {
    * Delete all tasks.
    */
   deleteAll(): void {
-    this.listService.myList.next([]);
+    this.listService.deleteAll()
     this.selAllFormEl.reset()
   }
 
   /**
-   * Delete all selected tasks.
+   * Delete all selected tasks (done tasks).
    */
-  deleteSelected(): void {
-    const notChecked: any = this.listService.myList.value.filter((task: Task) => {
-      return !task.checked;
-    });
-    this.listService.myList.next(notChecked);
-
+  deleteDone(): void {
+    this.listService.deleteDone()
     this.selAllFormEl.reset()
   }
 }
