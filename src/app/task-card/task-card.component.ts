@@ -82,14 +82,14 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Edite task's title of the same card
+   * Open a dialog box tat allow to edite task's title of the same card
    */
   editTask(): void {
     this.dialogEl.showModal();
   }
 
   /**
-   * Close the dialog box
+   * Close the dialog box that used to edit the task's title
    */
   closeDialog(): void {
     this.dialogEl.close();

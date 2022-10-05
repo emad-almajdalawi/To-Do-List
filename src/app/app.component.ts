@@ -83,7 +83,7 @@ export class AppComponent {
   }
 
   /**
-   * Delete all selected tasks.
+   * Delete all selected tasks (done tasks).
    */
   deleteDone(): void {
     this.listService.deleteDone()

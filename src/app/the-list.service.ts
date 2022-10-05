@@ -3,11 +3,6 @@ import { BehaviorSubject, catchError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
-// export interface Task {
-//   title: string;
-//   checked: boolean
-// }
-
 export interface TaskDB {
   _id: any,
   title: string,
@@ -45,6 +40,9 @@ export class TheListService {
     public http: HttpClient
   ) { }
 
+  /**
+   * Check if all tasks are selected and save the result in a variable
+   */
   isAllDone(): void {
     this.myList.value.forEach(element => {
       if (element.done == false) {
@@ -53,10 +51,17 @@ export class TheListService {
     })
   }
 
+  /**
+   * Fetch all data from the database
+   */
   getTasks(): Observable<TaskDB[]> {
     return this.http.get<TaskDB[]>(this.baseUrl + '/tasks.json')
   }
 
+  /**
+   * Add a new task to the database and to the rendered BehaviorSubject
+   * @param {AddTaskDB} body The body of the new data (title and done)
+   */
   addTask(body: AddTaskDB): void {
     this.http.post<PostResponse>(this.baseUrl + '/task/add', body)
       .subscribe(res => {
@@ -65,6 +70,12 @@ export class TheListService {
       });
   }
 
+  /**
+   * Update the title of one task in the database and the rendered BehaviorSubject
+   * @param {string} id The is od the task that wanted to be updated
+   * @param {AddTaskDB} body The new body of the task (title and done)
+   * @param {TaskNewId} task The new body of the task with edited keys (string id not ObjectId)
+   */
   updateTask(id: string, body: AddTaskDB, task: TaskNewId): void {
     this.http.post<PostResponse>(this.baseUrl + `/task/update/${id}`, body)
       .subscribe(res => {
@@ -74,6 +85,11 @@ export class TheListService {
       });
   }
 
+  /**
+   * Delete one task from the database and from the rendered BehaviorSubject
+   * @param {string} id The is od the task that wanted to be updated
+   * @param {TaskNewId} task The new body of the task with edited keys (string id not ObjectId)
+   */
   deleteTask(id: string, task: TaskNewId): void {
     this.http.post<PostResponse>(this.baseUrl + `/task/delete/${id}`, null)
       .subscribe(res => {
@@ -83,6 +99,9 @@ export class TheListService {
       });
   }
 
+  /**
+   * Delete all tasks from the database and from the rendered BehaviorSubject
+   */
   deleteAll(): void {
     this.http.post(this.baseUrl + `/task/deleteall`, null)
       .subscribe(res => {
@@ -91,6 +110,11 @@ export class TheListService {
       });
   }
 
+  /**
+   * Mark one task as done in the database and the rendered BehaviorSubject
+   * @param {string} id The is od the task that wanted to be updated
+   * @param {AddTaskDB} body The new body of the task (title and done)
+   * @param {TaskNewId} task The new body of the task with edited keys (string id not ObjectId)   */
   oneDone(id: string, body: AddTaskDB, task: TaskNewId): void {
     this.http.post<PostResponse>(this.baseUrl + `/task/done/${id}`, body)
       .subscribe(res => {
@@ -100,6 +124,10 @@ export class TheListService {
       });
   }
 
+  /**
+   * Mark all tasks as done or not done in the database and the rendered BehaviorSubject
+   * @param {boolean} isDone Checking if the select all checkbox checked or not
+   */
   allDone(isDone: boolean): void {
     this.http.post<PostResponse>(this.baseUrl + `/task/alldone/${isDone}`, null)
       .subscribe(res => {
@@ -107,6 +135,9 @@ export class TheListService {
       });
   }
 
+  /**
+   * Delete all done tasks from the database and from the rendered BehaviorSubject
+   */
   deleteDone(): void {
     this.http.post(this.baseUrl + `/task/deletedone`, null)
       .subscribe(res => {
@@ -118,6 +149,10 @@ export class TheListService {
       });
   }
 
+  /**
+   * Convert the id type from ObjectId to string
+   * @param {TaskDB} oldData The data that has ObjectId and wanted to be converted
+   */
   renameId(oldData: TaskDB): any {
     let newData = {}
     const kyes = ['title', 'done']
@@ -127,5 +162,4 @@ export class TheListService {
     });
     return newData
   }
-
 }
