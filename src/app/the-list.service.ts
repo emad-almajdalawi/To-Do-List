@@ -37,13 +37,21 @@ export interface TaskNewId {
 export class TheListService {
 
   baseUrl: string = 'http://127.0.0.1:5000'
-
   myList: BehaviorSubject<TaskNewId[]> = new BehaviorSubject([])
+  flag: boolean = false
 
 
   constructor(
     public http: HttpClient
   ) { }
+
+  isAllDone(): void {
+    this.myList.value.forEach(element => {
+      if (element.done == false) {
+        this.flag = true
+      }
+    })
+  }
 
   getTasks(): Observable<TaskDB[]> {
     return this.http.get<TaskDB[]>(this.baseUrl + '/tasks.json')
@@ -70,9 +78,43 @@ export class TheListService {
     this.http.post<PostResponse>(this.baseUrl + `/task/delete/${id}`, null)
       .subscribe(res => {
         console.log(res)
-        // console.log('task from servace', task)
         const index = this.myList.value.indexOf(task);
         this.myList.value.splice(index, 1);
+      });
+  }
+
+  deleteAll(): void {
+    this.http.post(this.baseUrl + `/task/deleteall`, null)
+      .subscribe(res => {
+        console.log(res)
+        this.myList.next([]);
+      });
+  }
+
+  oneDone(id: string, body: AddTaskDB, task: TaskNewId): void {
+    this.http.post<PostResponse>(this.baseUrl + `/task/done/${id}`, body)
+      .subscribe(res => {
+        console.log(res)
+        const index = this.myList.value.indexOf(task);
+        this.myList.value.splice(index, 1, res.data);
+      });
+  }
+
+  allDone(isDone: boolean): void {
+    this.http.post<PostResponse>(this.baseUrl + `/task/alldone/${isDone}`, null)
+      .subscribe(res => {
+        console.log(res)
+      });
+  }
+
+  deleteDone(): void {
+    this.http.post(this.baseUrl + `/task/deletedone`, null)
+      .subscribe(res => {
+        console.log(res)
+        const notChecked: any = this.myList.value.filter((task: TaskNewId) => {
+          return !task.done;
+        });
+        this.myList.next(notChecked);
       });
   }
 

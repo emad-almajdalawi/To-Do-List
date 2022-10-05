@@ -15,9 +15,10 @@
     </div>
     <div class="select-all">
       <form #selAllForm class="select-all-form">
-        <input type="checkbox" class="select-all" [checked]="selectedCounter == listService.myList.value.length"
-          (change)="onSelectAll($event)">
-        <label>Sellect All</label>
+        <input type="checkbox" class="select-all"
+          [checked]="selectedCounter == listService.myList.value.length || listService.flag"
+          (change)="onAllDone($event)">
+        <label>All Done</label>
       </form>
     </div>
   </div>
@@ -29,10 +30,10 @@
     <div class="uncompleted-tasks">
       <p>{{listService.myList.value.length}} uncompleted tasks</p>
     </div>
-    <div class="delete-selected" (click)="deleteSelected()">
+    <div class="delete-selected" (click)="deleteDone()">
       <button #delSelected class="del-btn btn del-selected" [ngClass]="{
             'hidden': selectedCounter < 1
-          }">Delete Selected</button>
+          }">Delete Done</button>
       <button class="del-btn btn" (click)="deleteAll()">Delete All</button>
     </div>
   </div>

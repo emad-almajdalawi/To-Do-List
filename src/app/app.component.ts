@@ -26,6 +26,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.listService.getTasks().subscribe((data: TaskDB[]) => {
+      this.listService.isAllDone()
       let renamedId = [];
       data.forEach(element => {
         let newObj = {};
@@ -58,9 +59,10 @@ export class AppComponent {
    * Assign "true" or "false" as a value of "checked" attribute in all "Task" objects.
    * @param {any} e The event's element
    */
-  onSelectAll(e: any): void {
+  onAllDone(e: any): void {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
+    this.listService.allDone(isChecked)
 
     const newList: TaskNewId[] = this.listService.myList.value.map((task: TaskNewId) => {
       isChecked ? task.done = true : task.done = false;
@@ -76,19 +78,15 @@ export class AppComponent {
    * Delete all tasks.
    */
   deleteAll(): void {
-    this.listService.myList.next([]);
+    this.listService.deleteAll()
     this.selAllFormEl.reset()
   }
 
   /**
    * Delete all selected tasks.
    */
-  deleteSelected(): void {
-    const notChecked: any = this.listService.myList.value.filter((task: TaskNewId) => {
-      return !task.done;
-    });
-    this.listService.myList.next(notChecked);
-
+  deleteDone(): void {
+    this.listService.deleteDone()
     this.selAllFormEl.reset()
   }
 }

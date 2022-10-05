@@ -44,6 +44,11 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    * @param {any} e The event element
    */
   onCheckboxSelect(e: any): void {
+    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
+      return task.id == this.task.id;
+    })
+
+    this.listService.oneDone(theTask[0].id, { title: theTask[0].title, done: e.target.checked }, theTask[0])
     this.task.done = e.target.checked;
     this.addDoneToClass();
 
