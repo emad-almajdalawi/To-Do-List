@@ -15,8 +15,7 @@
     </div>
     <div class="select-all">
       <form #selAllForm class="select-all-form">
-        <input type="checkbox" class="select-all"
-          [checked]="selectedCounter == listService.myList.value.length || listService.flag"
+        <input type="checkbox" class="select-all" [checked]="selectedCounter == listService.myList.value.length"
           (change)="onAllDone($event)">
         <label>All Done</label>
       </form>

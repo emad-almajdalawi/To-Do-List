@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -33,23 +33,11 @@ export class TheListService {
 
   baseUrl: string = 'http://127.0.0.1:5000'
   myList: BehaviorSubject<TaskNewId[]> = new BehaviorSubject([])
-  flag: boolean = false
-
+  isAllDone: boolean
 
   constructor(
     public http: HttpClient
   ) { }
-
-  /**
-   * Check if all tasks are selected and save the result in a variable
-   */
-  isAllDone(): void {
-    this.myList.value.forEach(element => {
-      if (element.done == false) {
-        this.flag = true
-      }
-    })
-  }
 
   /**
    * Fetch all data from the database

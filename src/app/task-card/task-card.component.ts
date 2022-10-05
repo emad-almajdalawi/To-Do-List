@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { TheListService, TaskDB, TaskNewId } from '../the-list.service';
+import { TheListService, TaskNewId } from '../the-list.service';
 
 
 @Component({
@@ -73,8 +73,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   deleteTask(e: Event): void {
     e.preventDefault();
-    // let index = this.listService.myList.value.indexOf(this.task);
-    // this.listService.myList.value.splice(index, 1);
     let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
       return task.id == this.task.id;
     })
@@ -102,7 +100,6 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   editTitle(e: Event): void {
     e.preventDefault();
-    // this.task.title = e.target['inp'].value;
     let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
       return task.id == this.task.id;
     })

@@ -26,7 +26,6 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.listService.getTasks().subscribe((data: TaskDB[]) => {
-      this.listService.isAllDone()
       let renamedId = [];
       data.forEach(element => {
         let newObj = {};
@@ -35,6 +34,11 @@ export class AppComponent {
       })
       this.listService.myList.next(renamedId);
       console.log(renamedId)
+      this.listService.myList.value.forEach(element => {
+        if (element.done) {
+          this.selectedCounter += 1
+        }
+      })
     });
   }
 
@@ -49,7 +53,6 @@ export class AppComponent {
    */
   onKeyEnter(e: any): void {
     e.preventDefault();
-    // this.listService.myList.value.push({ title: e.target.value, done: false })
     this.listService.addTask({ title: e.target.value, done: false })
     this.formEl.reset()
     this.selAllFormEl.reset()
