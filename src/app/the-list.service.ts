@@ -76,4 +76,14 @@ export class TheListService {
       });
   }
 
+  renameId(oldData: TaskDB): any {
+    let newData = {}
+    const kyes = ['title', 'done']
+    newData['id'] = oldData["_id"]['$oid'].toString()
+    kyes.forEach(feild_key => {
+      newData[feild_key] = oldData[feild_key]
+    });
+    return newData
+  }
+
 }

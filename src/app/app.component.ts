@@ -29,7 +29,7 @@ export class AppComponent {
       let renamedId = [];
       data.forEach(element => {
         let newObj = {};
-        newObj = this.renameId(element)
+        newObj = this.listService.renameId(element)
         renamedId.push(newObj)
       })
       this.listService.myList.next(renamedId);
@@ -90,15 +90,5 @@ export class AppComponent {
     this.listService.myList.next(notChecked);
 
     this.selAllFormEl.reset()
-  }
-
-  renameId(oldData: TaskDB): any {
-    let newData = {}
-    const kyes = ['title', 'done']
-    newData['id'] = oldData["_id"]['$oid'].toString()
-    kyes.forEach(feild_key => {
-      newData[feild_key] = oldData[feild_key]
-    });
-    return newData
   }
 }
