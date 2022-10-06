@@ -6,7 +6,12 @@
 
 .task-card {
   display: grid;
-  grid-template-columns: 1fr 8fr 2fr;
+  grid-template-columns: 1fr 6fr 3fr;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .btn {
@@ -16,17 +21,28 @@
 }
 
 .edit-btn {
-  background: lightgreen;
+  background: turquoise;
+  ;
+  width: 70px;
 }
 
 .del-btn {
   background: lightcoral;
+  width: 70px;
+}
+
+.done-btn {
+  background: lightgreen;
+  width: 100px;
 }
 
 .checkbox {
+  transform: scale(1.2);
+}
+
+.checkbox-div {
   display: flex;
   align-items: center;
-  transform: scale(1.2);
 }
 
 .task-title {

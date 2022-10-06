@@ -6,12 +6,14 @@ import { HttpClient } from '@angular/common/http';
 export interface TaskDB {
   _id: any,
   title: string,
-  done: boolean
+  done: boolean,
+  // user: string
 }
 
 export interface AddTaskDB {
   title: string,
-  done: boolean
+  done: boolean,
+  // user: string
 }
 
 export interface PostResponse {
@@ -21,9 +23,10 @@ export interface PostResponse {
 }
 
 export interface TaskNewId {
+  id: string,
   title: string,
   done: boolean,
-  id: string
+  // user: string
 }
 
 @Injectable({
@@ -34,6 +37,9 @@ export class TheListService {
   baseUrl: string = 'http://127.0.0.1:5000'
   myList: BehaviorSubject<TaskNewId[]> = new BehaviorSubject([])
   isAllDone: boolean
+  doneCounter: BehaviorSubject<number> = new BehaviorSubject(0)
+
+  selectedList: BehaviorSubject<string[]> = new BehaviorSubject([])
 
   constructor(
     public http: HttpClient
@@ -123,18 +129,24 @@ export class TheListService {
       });
   }
 
-  /**
-   * Delete all done tasks from the database and from the rendered BehaviorSubject
-   */
-  deleteDone(): void {
-    this.http.post(this.baseUrl + `/task/deletedone`, null)
-      .subscribe(res => {
-        console.log(res)
-        const notChecked: any = this.myList.value.filter((task: TaskNewId) => {
-          return !task.done;
-        });
-        this.myList.next(notChecked);
-      });
+  deleteMany(id: string[]) {
+    const data: any = {
+      allIds: id
+    }
+
+    this.http.post(this.baseUrl + '/task/deletemany', data).subscribe(res => {
+      console.log(res);
+
+      let new_list = []
+      this.myList.value.forEach(element => {
+        if (!id.includes(element.id)) {
+          new_list.push(element)
+        }
+      })
+
+      this.myList.next(new_list)
+      this.selectedList.next([])
+    })
   }
 
   /**

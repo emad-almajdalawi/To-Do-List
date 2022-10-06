@@ -1,6 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { __values } from 'tslib';
+import { MatDialog } from '@angular/material/dialog';
 import { TheListService, TaskDB, TaskNewId } from './the-list.service';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+
 
 @Component({
   selector: 'app-root',
@@ -18,10 +21,9 @@ export class AppComponent {
   selAllForm?: ElementRef;
   selAllFormEl: any
 
-  selectedCounter: number = 0;
-
   constructor(
-    public listService: TheListService
+    public listService: TheListService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -32,13 +34,10 @@ export class AppComponent {
         newObj = this.listService.renameId(element)
         renamedId.push(newObj)
       })
+
       this.listService.myList.next(renamedId);
-      console.log(renamedId)
-      this.listService.myList.value.forEach(element => {
-        if (element.done) {
-          this.selectedCounter += 1
-        }
-      })
+
+      this.listService.doneCounter.next(this.listService.myList.value.filter((t: TaskNewId) => t.done).length);
     });
   }
 
@@ -62,19 +61,23 @@ export class AppComponent {
    * Assign "true" or "false" as a value of "checked" attribute in all "Task" objects.
    * @param {any} e The event's element
    */
-  onAllDone(e: any): void {
+  onSelectAll(e: any): void {
     e.preventDefault();
     const isChecked: boolean = e.target.checked;
-    this.listService.allDone(isChecked)
 
     const newList: TaskNewId[] = this.listService.myList.value.map((task: TaskNewId) => {
-      isChecked ? task.done = true : task.done = false;
+      if (isChecked && !this.listService.selectedList.value.includes(task.id)) {
+        this.listService.selectedList.next([...this.listService.selectedList.value, task.id])
+      }
+      else {
+        const index = this.listService.selectedList.next([])
+      }
+
+      console.log(this.listService.selectedList.value)
 
       return task;
     });
     this.listService.myList.next(newList);
-
-    this.selectedCounter = isChecked ? this.listService.myList.value.length : 0;
   }
 
   /**
@@ -88,8 +91,35 @@ export class AppComponent {
   /**
    * Delete all selected tasks (done tasks).
    */
-  deleteDone(): void {
-    this.listService.deleteDone()
+  deleteSelected(): void {
+    this.listService.deleteMany(this.listService.selectedList.value)
     this.selAllFormEl.reset()
+  }
+
+  deleteDone() {
+    let ids: string[] = []
+    this.listService.myList.value.forEach((element: TaskNewId) => {
+      if (element.done) {
+        ids.push(element.id)
+      }
+    })
+    this.listService.deleteMany(ids)
+    this.listService.doneCounter.next(0);
+  }
+
+  openRegisterDialog(): void {
+    this.dialog.open(RegisterComponent)
+  }
+
+  closeRegisterDialog(): void {
+    // this.dialog.close(RegisterComponent)
+  }
+
+  openLoginDialog(): void {
+    this.dialog.open(LoginComponent)
+  }
+
+  closeLoginDialog(): void {
+    // this.dialog.close(LoginComponent)
   }
 }

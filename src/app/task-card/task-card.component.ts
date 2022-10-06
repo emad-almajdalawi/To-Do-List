@@ -19,18 +19,27 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   @Input() task: TaskNewId;
   @Input() selectAllChecked: boolean;
-  @Input() selectedCounter: number;
 
-  @Output() selectedCounterChange = new EventEmitter<number>();
 
   className: string = '';
+  isSelected: boolean;
 
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
-    this.listService.myList.subscribe((arr) => {
+    this.listService.myList.subscribe(() => {
       this.addDoneToClass();
+      this.listService.doneCounter.next(this.listService.myList.value.filter((t: TaskNewId) => t.done).length);
+
     });
+
+    this.listService.selectedList.subscribe(() => {
+      this.isSelected = this.listService.selectedList.value.includes(this.task.id)
+    })
+
+    this.listService.doneCounter.subscribe(() => {
+
+    })
   }
 
   ngAfterViewInit(): void {
@@ -41,19 +50,10 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   /**
    * Assign "true" or "false" as a value of "checked" attribute in the "Task" object of the same card.
-   * @param {any} e The event element
    */
-  onCheckboxSelect(e: any): void {
-    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
-      return task.id == this.task.id;
-    })
-
-    this.listService.oneDone(theTask[0].id, { title: theTask[0].title, done: e.target.checked }, theTask[0])
-    this.task.done = e.target.checked;
+  taskDone(): void {
+    this.listService.oneDone(this.task.id, { title: this.task.title, done: !this.task.done }, this.task)
     this.addDoneToClass();
-
-    e.target.checked ? this.selectedCounter++ : this.selectedCounter--;
-    this.selectedCounterChange.emit(this.selectedCounter);
   }
 
   /**
@@ -105,5 +105,19 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
     })
     this.listService.updateTask(theTask[0].id, { title: e.target['inp'].value, done: theTask[0].done }, theTask[0])
     this.closeDialog();
+  }
+
+  onCheckboxSelect(e: any) {
+    let isChecked = e.target.checked
+
+    if (isChecked && !this.listService.selectedList.value.includes(this.task.id)) {
+      this.listService.selectedList.next([...this.listService.selectedList.value, this.task.id])
+    }
+    else if (!isChecked) {
+      const index = this.listService.selectedList.value.indexOf(this.task.id);
+      this.listService.selectedList.value.splice(index, 1);
+    }
+
+    console.log(this.listService.selectedList.value)
   }
 }
