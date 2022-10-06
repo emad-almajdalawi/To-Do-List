@@ -15,11 +15,11 @@ export class AppComponent {
 
   @ViewChild('insertionForm')
   form?: ElementRef;
-  formEl: any
+  formEl: any;
 
   @ViewChild('selAllForm')
   selAllForm?: ElementRef;
-  selAllFormEl: any
+  selAllFormEl: any;
 
   constructor(
     public listService: TheListService,
@@ -31,8 +31,8 @@ export class AppComponent {
       let renamedId = [];
       data.forEach(element => {
         let newObj = {};
-        newObj = this.listService.renameId(element)
-        renamedId.push(newObj)
+        newObj = this.listService.renameId(element);
+        renamedId.push(newObj);
       })
 
       this.listService.myList.next(renamedId);
@@ -42,8 +42,8 @@ export class AppComponent {
   }
 
   ngAfterViewInit(): void {
-    this.formEl = this.form?.nativeElement
-    this.selAllFormEl = this.selAllForm?.nativeElement
+    this.formEl = this.form?.nativeElement;
+    this.selAllFormEl = this.selAllForm?.nativeElement;
   }
 
   /**
@@ -52,9 +52,9 @@ export class AppComponent {
    */
   onKeyEnter(e: any): void {
     e.preventDefault();
-    this.listService.addTask({ title: e.target.value, done: false })
-    this.formEl.reset()
-    this.selAllFormEl.reset()
+    this.listService.addTask({ title: e.target.value, done: false });
+    this.formEl.reset();
+    this.selAllFormEl.reset();
   }
 
   /**
@@ -67,15 +67,13 @@ export class AppComponent {
 
     const newList: TaskNewId[] = this.listService.myList.value.map((task: TaskNewId) => {
       if (isChecked && !this.listService.selectedList.value.includes(task.id)) {
-        this.listService.selectedList.next([...this.listService.selectedList.value, task.id])
+        this.listService.selectedList.next([...this.listService.selectedList.value, task.id]);
       }
       else {
-        const index = this.listService.selectedList.next([])
+        this.listService.selectedList.next([]);
       }
 
-      console.log(this.listService.selectedList.value)
-
-      return task;
+      return task
     });
     this.listService.myList.next(newList);
   }
@@ -84,42 +82,57 @@ export class AppComponent {
    * Delete all tasks.
    */
   deleteAll(): void {
-    this.listService.deleteAll()
-    this.selAllFormEl.reset()
+    this.listService.deleteAll();
+    this.selAllFormEl.reset();
   }
 
   /**
-   * Delete all selected tasks (done tasks).
+   * Delete all selected tasks.
    */
   deleteSelected(): void {
-    this.listService.deleteMany(this.listService.selectedList.value)
-    this.selAllFormEl.reset()
+    this.listService.deleteMany(this.listService.selectedList.value);
+    this.selAllFormEl.reset();
   }
 
+  /**
+   * Delete all done tasks.
+   */
   deleteDone() {
     let ids: string[] = []
     this.listService.myList.value.forEach((element: TaskNewId) => {
       if (element.done) {
-        ids.push(element.id)
+        ids.push(element.id);
       }
     })
     this.listService.deleteMany(ids)
     this.listService.doneCounter.next(0);
   }
 
+  /**
+   * Open the Register dialog (popup)
+   */
   openRegisterDialog(): void {
-    this.dialog.open(RegisterComponent)
+    this.dialog.open(RegisterComponent);
   }
 
+  /**
+   * Close the Register dialog (popup)
+   */
   closeRegisterDialog(): void {
-    // this.dialog.close(RegisterComponent)
+    // this.dialog.close(RegisterComponent);
   }
 
+  /**
+   * Open the LogIn dialog (popup)
+   */
   openLoginDialog(): void {
-    this.dialog.open(LoginComponent)
+    this.dialog.open(LoginComponent);
   }
 
+  /**
+   * Close the LogIn dialog (popup)
+   */
   closeLoginDialog(): void {
-    // this.dialog.close(LoginComponent)
+    // this.dialog.close(LoginComponent);
   }
 }
