@@ -113,8 +113,16 @@ export class TheListService {
     this.http.post<PostResponse>(this.baseUrl + `/task/done/${id}`, body)
       .subscribe(res => {
         console.log(res)
-        const index = this.myList.value.indexOf(task);
-        this.myList.value.splice(index, 1, res.data);
+        let new_list = []
+        this.myList.value.forEach(element => {
+          if (element.id == task.id) {
+            new_list.push(res.data)
+          }
+          else {
+            new_list.push(element)
+          }
+        })
+        this.myList.next(new_list)
       });
   }
 
