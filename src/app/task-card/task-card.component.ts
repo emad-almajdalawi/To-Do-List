@@ -11,60 +11,54 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
 
   @ViewChild('dialog')
   dialog?: ElementRef;
-  dialogEl: any
+  dialogEl: any;
 
   @ViewChild('editInput')
   editInput?: ElementRef;
-  editInputEl: any
+  editInputEl: any;
 
   @Input() task: TaskNewId;
   @Input() selectAllChecked: boolean;
-  @Input() selectedCounter: number;
 
-  @Output() selectedCounterChange = new EventEmitter<number>();
 
   className: string = '';
+  isSelected: boolean;
 
   constructor(public listService: TheListService) { }
 
   ngOnInit(): void {
-    this.listService.myList.subscribe((arr) => {
+    this.listService.myList.subscribe(() => {
       this.addDoneToClass();
+      this.listService.doneCounter.next(this.listService.myList.value.filter((t: TaskNewId) => t.done).length);
+
     });
+
+    this.listService.selectedList.subscribe(() => {
+      this.isSelected = this.listService.selectedList.value.includes(this.task.id);
+    })
+
+    this.listService.doneCounter.subscribe(() => { })
   }
 
   ngAfterViewInit(): void {
     this.addDoneToClass();
     this.dialogEl = this.dialog?.nativeElement;
-    this.editInputEl = this.editInput?.nativeElement
+    this.editInputEl = this.editInput?.nativeElement;
   }
 
   /**
    * Assign "true" or "false" as a value of "checked" attribute in the "Task" object of the same card.
-   * @param {any} e The event element
    */
-  onCheckboxSelect(e: any): void {
-    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
-      return task.id == this.task.id;
-    })
-
-    this.listService.oneDone(theTask[0].id, { title: theTask[0].title, done: e.target.checked }, theTask[0])
-    this.task.done = e.target.checked;
+  taskDone(): void {
+    this.listService.oneDone(this.task.id, { title: this.task.title, done: !this.task.done }, this.task);
     this.addDoneToClass();
-
-    e.target.checked ? this.selectedCounter++ : this.selectedCounter--;
-    this.selectedCounterChange.emit(this.selectedCounter);
   }
 
   /**
    * Add the class "done" to the task's title in the same card if it is checked.
    */
   addDoneToClass(): void {
-    if (this.task.done) {
-      this.className = 'done';
-    } else {
-      this.className = '';
-    }
+    this.className = this.task.done ? 'done' : '';
   }
 
   /**
@@ -73,10 +67,7 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   deleteTask(e: Event): void {
     e.preventDefault();
-    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
-      return task.id == this.task.id;
-    })
-    this.listService.deleteTask(theTask[0].id, theTask[0])
+    this.listService.deleteTask(this.task.id, this.task);
   }
 
   /**
@@ -100,10 +91,19 @@ export class TaskCardComponent implements OnInit, AfterViewInit {
    */
   editTitle(e: Event): void {
     e.preventDefault();
-    let theTask = this.listService.myList.value.filter((task: TaskNewId) => {
-      return task.id == this.task.id;
-    })
-    this.listService.updateTask(theTask[0].id, { title: e.target['inp'].value, done: theTask[0].done }, theTask[0])
+    this.listService.updateTask(this.task.id, { title: e.target['inp'].value, done: this.task.done }, this.task);
     this.closeDialog();
+  }
+
+  onCheckboxSelect(e: any) {
+    let isChecked = e.target.checked;
+
+    if (isChecked && !this.listService.selectedList.value.includes(this.task.id)) {
+      this.listService.selectedList.next([...this.listService.selectedList.value, this.task.id]);
+    }
+    else if (!isChecked) {
+      const index = this.listService.selectedList.value.indexOf(this.task.id);
+      this.listService.selectedList.value.splice(index, 1);
+    }
   }
 }

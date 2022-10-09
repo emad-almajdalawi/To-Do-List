@@ -1,38 +1,51 @@
 <div class="main">
-  <div class="date-time">
-    <app-date-time></app-date-time>
-  </div>
   <div class="header">
-    <div></div>
-    <div class="title">
-      <h1>TODO LIST</h1>
-      <div class="insertion">
-        <form #insertionForm class="insertion-form">
-          <input type="text" class="insertion-bar" placeholder="Things you want to do today?"
-            (keydown.enter)="onKeyEnter($event)">
-        </form>
+    <div class="top-header">
+      <div class="date-time">
+        <app-date-time></app-date-time>
+      </div>
+      <div class="auth">
+        <button class="auth-btn btn" mat-raised-button (click)="openRegisterDialog()">Register</button>
+        <button class="auth-btn btn" mat-button (click)="openLoginDialog()">LogIn</button>
       </div>
     </div>
-    <div class="select-all">
-      <form #selAllForm class="select-all-form">
-        <input type="checkbox" class="select-all" [checked]="selectedCounter == listService.myList.value.length"
-          (change)="onAllDone($event)">
-        <label>All Done</label>
-      </form>
+    <div class="bottom-header">
+      <div class="select-all">
+        <form #selAllForm class="select-all-form">
+          <input type="checkbox" class="select-all"
+            [checked]="(listService.selectedList.value.length == listService.myList.value.length) && (listService.selectedList.value.length !=0)"
+            (change)="onSelectAll($event)">
+          <label>Select All</label>
+        </form>
+      </div>
+      <div class="title">
+        <h1>TODO LIST</h1>
+        <div class="insertion">
+          <form #insertionForm class="insertion-form">
+            <input type="text" class="insertion-bar" placeholder="Things you want to do today?"
+              (keydown.enter)="onKeyEnter($event)">
+          </form>
+        </div>
+      </div>
+      <div> </div>
     </div>
   </div>
+
   <div class="task" *ngFor="let t of listService.myList.value">
-    <app-task-card [(selectedCounter)]="selectedCounter" [task]="t">
+    <app-task-card [task]="t">
     </app-task-card>
   </div>
   <div class="footer">
     <div class="uncompleted-tasks">
-      <p>{{listService.myList.value.length}} uncompleted tasks</p>
+      <p>{{listService.selectedList.value.length}} Selected tasks</p>
+      <p>{{listService.myList.value.length - listService.doneCounter.value}} Uncompleated tasks</p>
     </div>
-    <div class="delete-selected" (click)="deleteDone()">
+    <div class="delete-selected" (click)="deleteSelected()">
       <button #delSelected class="del-btn btn del-selected" [ngClass]="{
-            'hidden': selectedCounter < 1
-          }">Delete Done</button>
-      <button class="del-btn btn" (click)="deleteAll()">Delete All</button>
+            'hidden': listService.selectedList.value.length < 1
+          }">Delete Selected</button>
+      <button class="del-btn btn" (click)="deleteDone()" [ngClass]="{
+        'hidden': listService.doneCounter.value < 1
+      }">Delete Done</button>
     </div>
   </div>
