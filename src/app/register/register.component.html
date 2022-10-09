@@ -2,9 +2,10 @@
   <div class="header">
     <h1 mat-dialog-title>Register Now</h1>
     <div class="close-div">
-      <a class="close">×</a>
+      <a mat-dialog-close class=" close">×</a>
     </div>
   </div>
+
   <form mat-dialog-content>
     <label for="username">User Name</label>
     <input type="text" name="username" placeholder="No spaces or special caracter e.g. adam2022">
@@ -12,6 +13,8 @@
     <input type="password" name="password">
     <label for="repeatePassword">Repeate Password</label>
     <input type="password" name="repeatePassword">
-    <button type="submit" class="btn">Register</button>
+    <mat-dialog-actions>
+      <button type="submit" class="btn">Register</button>
+    </mat-dialog-actions>
   </form>
 </div>

@@ -24,7 +24,7 @@ form {
 }
 
 input {
-  width: 350px;
+  width: 450px;
   padding: 10px;
   border-radius: 8px;
 }
@@ -36,6 +36,8 @@ input {
   font-size: 20px;
   border-radius: 15px;
   width: 200px;
+  justify-content: center;
+  background: green;
 }
 
 .header {

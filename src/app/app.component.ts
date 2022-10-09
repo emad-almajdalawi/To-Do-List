@@ -112,27 +112,29 @@ export class AppComponent {
    * Open the Register dialog (popup)
    */
   openRegisterDialog(): void {
-    this.dialog.open(RegisterComponent);
-  }
+    const dialogRef = this.dialog.open(RegisterComponent, {
+      width: '800px',
+      // data: ''
+    });
 
-  /**
-   * Close the Register dialog (popup)
-   */
-  closeRegisterDialog(): void {
-    // this.dialog.close(RegisterComponent);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   console.log(result)
+    // });
   }
 
   /**
    * Open the LogIn dialog (popup)
    */
   openLoginDialog(): void {
-    this.dialog.open(LoginComponent);
-  }
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '800px',
+      // data: ''
+    });
 
-  /**
-   * Close the LogIn dialog (popup)
-   */
-  closeLoginDialog(): void {
-    // this.dialog.close(LoginComponent);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   console.log(result)
+    // });
   }
 }
